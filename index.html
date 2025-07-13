@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Malla Curricular - Ing. Mecánica EIA</title>
+  <style>
+    body {
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      background-color:  #e7f8e6e6;
+      margin: 0;
+      padding: 0;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #fa860b;
+    }
+    .container {
+      display: flex;
+      overflow-x: auto;
+      padding: 20px;
+      gap: 20px;
+    }
+    .year {
+      min-width: 400px;
+      flex-shrink: 2;
+    }
+    .semestre {
+      background-color: #f7f4b6;
+      border: 2px solid #cfbe03;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 15px;
+    }
+    .semestre:nth-child(even) {
+      background-color: #f8d9a8;
+      border: 2px solid #f29d14;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 15px;
+    }
+    .materia {
+      background-color: white;
+      border-radius: 10px;
+      padding: 10px;
+      margin: 5px 0;
+      cursor: pointer;
+      font-weight: bold;
+      color: #097503;
+    }
+    .materia.tachada {
+      text-decoration: line-through;
+      opacity: 0.5;
+    }
+    .materia.bloqueada {
+      background-color: #c2ccf5;
+      border: 2px dotted #5856a7;
+      color: rgb(143, 134, 163);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Malla Curricular - Ing. Mecánica EIA</h1>
+
+  <div class="container" id="malla"></div>
+
+  <script>
+    const materias = [
+      {
+        anio: "Primero", semestres: [
+          {
+            numero: "1º semestre", materias: [
+              { id: "Intro", nombre: "Introducción a la ingeniería (1)" },
+              { id: "ComCie", nombre: "Comunicación y ciencia (3)" },
+              { id: "QGI", nombre: "Química general e inorgánica (3)" },
+              { id: "Biolog", nombre: "Biología (1)" },
+              { id: "Progra", nombre: "Fundamentos de programación (3)"},
+              { id: "Geo", nombre: "Geometría (3)"},
+              { id: "CalcD", nombre: "Cálculo Diferencial (4)"}
+            ]
+          },
+          {
+            numero: "2º semestre", materias: [
+              { id: "P1", nombre: "Proyecto 1 (2)", previas: ["Biointro"] },
+              { id: "HCYS", nombre: "Hombre, cultura y sociedad (3)"},
+              { id: " Form", nombre: "Formación complementaria (1)"},
+              { id: "FM", nombre: "Física mecánica (3)"},
+              { id: "Ex", nombre: "Expresión gráfica (3)", previas: ["Geo"]},
+              { id: "AlgL", nombre: "Álgebra lineal (3)"},
+              { id: "Calint", nombre: "Cálculo integral (3)"}
+
+            ]
+          }
+        ]
+      },
+      {
+        anio: "Segundo", semestres: [
+          {
+            numero: "3º semestre", materias: [
+              { id: "DEM", nombre: "Dibujo de elemento de máquinas (2)", previas: ["Ex"] },
+              { id: "Termo", nombre: "Termodinámica (3)", previas: ["FM", "Calint"] },
+              { id: "CMat", nombre: "Ciencia de los materiales (3)", previas: ["GQI"] },
+              { id: "Est", nombre: "Estática (3)", previas: ["FM"] },
+              { id: "EEDD", nombre: "Ecuaciones diferenciales (3)"},
+              { id: "CVV", nombre: "Cálculo en varias variables (4)",previas: ["Calint"] }
+            ]
+          },
+          {
+            numero: "4º semestre", materias: [
+              { id: "ME", nombre: "Matemáticas especiales (3)", previas: ["EEDD"] },
+              { id: "FC", nombre: "Física de campos (3)", previas: ["CVV", "EEDD"] },
+              { id: "MM", nombre: "Mecánica de materiales (4)", previas: ["CM", "Est"]},
+              { id: "Dina", nombre: "Dinámica (3)", previas: ["Est"]},
+              { id: "PST", nombre: "Procesos y sistemas térmicos (3)", previas:["Termo"]},
+              { id: "P2", nombre: "Proyecto 2 (2)", previas: ["P1"]}
+            ]
+          }
+        ]
+      },
+      {
+        anio: "Tercero", semestres: [
+          {
+            numero: "5º semestre", materias: [
+              { id: "ProbEst", nombre: "Probabilidad y estadística (4)", previas: ["P1"] },
+              { id: "Anal", nombre: "Análisis numérico (3)", previas: ["ME" , "EEDD"]},
+              { id: "DiEM", nombre: "Diseño de elemento de maquinarias (3)", previas: ["DEM", "Dina"] },
+              { id: "ModSim", nombre: "Modelos y simulaciones (1)"},
+              { id: "MF", nombre: "Mecánica de fluidos (4)", previas: ["Termo", "QAI"]},
+              { id: "Eco", nombre: "Economía general (3)", previas: ["BasDat" , "ProbEst"] }
+            ]
+          },
+          {
+            numero: "6º semestre", materias: [
+              { id: "FO", nombre: "Física de ondas (3)", previas: ["FC"]},
+              { id: "MSSM", nombre: "Modelos y simulación de sistémicos mecánicos (3)", previas: ["ModSim", "DiEM"]},
+              { id: "TCal", nombre: "Transferencia de calor (4)", previas: ["MF", "ME"]},
+              { id: "Defor", nombre: "Deformación y remoción de materiales (3)", previas: ["MM", "DiEM"]},
+              { id: "Admin", nombre: "Administración general (3)", previas: ["Eco"]  },
+              { id: "P3", nombre: "Proyecto 3 (2)", previas: ["P1", "P2"] }
+            ]
+          }
+        ]
+      },
+      {
+        anio: "Cuarto", semestres: [
+          {
+            numero: "7º semestre", materias: [
+              { id: "M1", nombre: "Minor 1 (2)", previas: ["ProbEst"] },
+              { id: "Prepa", nombre: "Preparación SPE (0)" },
+              { id: "Ele", nombre: "Electricidad y electrónica (3)", previas: ["FC", "FO"]},
+              { id: "DiMec", nombre: "Diseño de mecanismos (3)", previas: ["MSSM"] },
+              { id: "Union", nombre: "Unión y solidificación de materiales (3)", previas: ["DiMec"] },
+              { id: "Macter", nombre: "Máquinas térmicas (3)", previas: ["MSSM", "TCal"] },
+              { id: "Conta", nombre: "Contabilidad y finanzas (3)"},
+              { id: "Ligi", nombre: "Legislación general (1)"}
+            ]
+          },
+          {
+            numero: "8º semestre", materias: [
+              { id: "M2", nombre: "Minor 2 (2)"},
+              { id: "Auto", nombre: "Automatización (3)", previas: ["Ele"] },
+              { id: "DST", nombre: "Diseño de sistemas térmicos (4)", previas: ["TCal"]},
+              { id: "Geopol", nombre: "Geopolítica (1)", previas: ["Eco"] },
+              { id: "FEP", nombre: "FEP (3)" },
+              { id: "DM", nombre: ["Diseño mecánico"]},
+              { id: "P4", nombre: "Proyecto 4 (2)" }
+           ]
+          }
+        ]
+      },
+      {
+        anio: "Quinto", semestres: [
+          {
+            numero: "9º semestre", materias: [
+              { id: "Grado1", nombre: "Trabajo de grado 1 (2)", previas: ["M2"] },
+              { id: "Control", nombre: "Control I. Mecánica (3))", previas: ["FO"] },
+              { id: "OP1", nombre: "Optativa 1"},
+              { id: "EAlt", nombre: "Energías alternativas (3)"}, 
+              { id: "GMI", nombre: "Gestión de mantenimiento industrial (3)", previas: ["DM"]},
+              { id: "Etres", nombre: "Ética y responsabilidad social"}
+            ]
+          }
+        ]
+      },
+      {
+        anio: "Quinto", semestres: [
+          {
+            numero: "10º semestre", materias: [
+              { id: "Grado2", nombre: "Trabajo de grado 2 (3)", previas: ["M2"] },
+              { id: "SPE", nombre: "SPE (15))", previas: ["Prepa"] }
+            ]
+          }
+        ]
+      }    
+    ];
+
+    const estadoMaterias = JSON.parse(localStorage.getItem("estadoMaterias") || "{}");
+
+    function crearMalla() {
+      const contenedor = document.getElementById("malla");
+      contenedor.innerHTML = "";
+
+      materias.forEach(anio => {
+        const divAnio = document.createElement("div");
+        divAnio.className = "year";
+
+        const h2 = document.createElement("h2");
+        h2.textContent = anio.anio;
+        divAnio.appendChild(h2);
+
+        anio.semestres.forEach(sem => {
+          const divSem = document.createElement("div");
+          divSem.className = "semestre";
+
+          const h3 = document.createElement("h3");
+          h3.textContent = sem.numero;
+          divSem.appendChild(h3);
+
+          sem.materias.forEach(materia => {
+            const divMat = document.createElement("div");
+            divMat.textContent = materia.nombre;
+            divMat.className = "materia";
+            divMat.dataset.id = materia.id;
+
+            if (estadoMaterias[materia.id]) {
+              divMat.classList.add("tachada");
+            }
+
+            // Verifica si cumple previas
+            if (materia.previas && materia.previas.some(p => !estadoMaterias[p])) {
+              divMat.classList.add("bloqueada");
+            }
+
+            divMat.addEventListener("click", () => {
+              if (divMat.classList.contains("bloqueada")) return;
+              divMat.classList.toggle("tachada");
+              estadoMaterias[materia.id] = divMat.classList.contains("tachada");
+              localStorage.setItem("estadoMaterias", JSON.stringify(estadoMaterias));
+              crearMalla(); // Volver a renderizar para actualizar dependencias
+            });
+
+            divSem.appendChild(divMat);
+          });
+
+          divAnio.appendChild(divSem);
+        });
+
+        contenedor.appendChild(divAnio);
+      });
+    }
+
+    crearMalla();
+  </script>
+  ...
+  <div id="contenedor-de-botones"></div>
+
+  <script src="logica.js"></script>
+  
+</body>
+</html>
